@@ -20,8 +20,7 @@ function start() {
 	myTimer = setInterval(runTime, 10);
 
 	document.getElementById('btn-start').removeEventListener("click", start);
-	// document.getElementById('btn-start').id = 'btn-stop';
-	// document.getElementById('btn-stop').innerHTML = 'Stop';
+	changeToStop();
 	document.getElementById('btn-stop').addEventListener("click", stop);
 	document.getElementById('btn-split').addEventListener("click", split);
 	document.getElementById('btn-reset').addEventListener("click", reset);  
@@ -33,13 +32,25 @@ function stop() {
 	var stop = document.createElement('p');
 	stop.innerHTML = 'Stop: ' + convertTime(result);
 	resultList.appendChild(stop);
-
-	document.getElementById('btn-stop').removeEventListener("click", stop); // DON'T WORK!!!!!!!!!!!!
-	document.getElementById('btn-split').removeEventListener("click", split);
-	// document.getElementById('btn-stop').id = 'btn-start';
-	// document.getElementById('btn-start').innerHTML = 'Start';
+	delListener();
+	changeToStart();
 	document.getElementById('btn-start').addEventListener("click", resume);
 };
+
+function delListener() {
+	document.getElementById('btn-stop').removeEventListener("click", stop);
+	document.getElementById('btn-split').removeEventListener("click", split);
+};
+
+function changeToStart() {
+	document.getElementById('btn-stop').id = 'btn-start';
+	document.getElementById('btn-start').innerHTML = 'Start';	
+} 
+
+function changeToStop() {
+	document.getElementById('btn-start').id = 'btn-stop';
+	document.getElementById('btn-stop').innerHTML = 'Stop';	
+} 
 
 function resume() {
 	starts = new Date();
@@ -47,8 +58,7 @@ function resume() {
 
 	document.getElementById('btn-start').removeEventListener("click", resume);
 	document.getElementById('btn-split').addEventListener("click", split);
-	// document.getElementById('btn-start').id = 'btn-stop';
-	// document.getElementById('btn-stop').innerHTML = 'Stop';
+	changeToStop();
 	document.getElementById('btn-stop').addEventListener("click", stop);
 };
 
@@ -66,11 +76,10 @@ function reset() {
 	starts = 0;
 	result = 0;
 	stopedTime = 0;
-	// if(document.getElementById('btn-stop')){
+	if(document.getElementById('btn-stop')){
 		document.getElementById('btn-stop').removeEventListener("click", stop);
-	// 	document.getElementById('btn-stop').id = 'btn-start';
-	// 	document.getElementById('btn-start').innerHTML = 'Start';
-	// }
+		changeToStart();
+	}
 	document.getElementById('btn-split').removeEventListener("click", split);
 	document.getElementById('btn-reset').removeEventListener("click", reset);  
 	document.getElementById('btn-start').removeEventListener("click", resume);
