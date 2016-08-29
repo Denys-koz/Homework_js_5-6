@@ -1,15 +1,81 @@
+var starts, myTimer, result;
+var stopedTime = 0;
 
-var starts, myTimer, result, txt;
-stopedTime = 0;
-//var result = {milliseconds = '000', seconds = '00', minutes = '00', hours = '00'};
+document.getElementById('btn-start').addEventListener("click", start);
 
+
+function runTime() {
+	var currentTime = new Date();
+	result = currentTime - starts;
+	showTime();
+}
 
 function showTime () {
-	var time = result + stopedTime; 
-	
-	txt = convertTime(time);
-	displ.innerHTML = txt;
+	var time = result + stopedTime;
+	displ.innerHTML = convertTime(time);
 }
+
+function start() {
+	starts = new Date();
+	myTimer = setInterval(runTime, 10);
+
+	document.getElementById('btn-start').removeEventListener("click", start);
+	// document.getElementById('btn-start').id = 'btn-stop';
+	// document.getElementById('btn-stop').innerHTML = 'Stop';
+	document.getElementById('btn-stop').addEventListener("click", stop);
+	document.getElementById('btn-split').addEventListener("click", split);
+	document.getElementById('btn-reset').addEventListener("click", reset);  
+};
+
+function stop() {
+	clearInterval(myTimer);
+	stopedTime += result;
+	var stop = document.createElement('p');
+	stop.innerHTML = 'Stop: ' + convertTime(result);
+	resultList.appendChild(stop);
+
+	document.getElementById('btn-stop').removeEventListener("click", stop); // DON'T WORK!!!!!!!!!!!!
+	document.getElementById('btn-split').removeEventListener("click", split);
+	// document.getElementById('btn-stop').id = 'btn-start';
+	// document.getElementById('btn-start').innerHTML = 'Start';
+	document.getElementById('btn-start').addEventListener("click", resume);
+};
+
+function resume() {
+	starts = new Date();
+	myTimer = setInterval(runTime, 10);
+
+	document.getElementById('btn-start').removeEventListener("click", resume);
+	document.getElementById('btn-split').addEventListener("click", split);
+	// document.getElementById('btn-start').id = 'btn-stop';
+	// document.getElementById('btn-stop').innerHTML = 'Stop';
+	document.getElementById('btn-stop').addEventListener("click", stop);
+};
+
+function split() {
+	var split = document.createElement('p');
+	split.innerHTML = 'Split: ' + convertTime(result);
+	resultList.appendChild(split);
+};
+
+function reset() {
+	clearInterval(myTimer);
+	txt = "00 : 00 : 00 . 000";
+	displ.innerHTML = txt;
+	resultList.innerHTML = '';
+	starts = 0;
+	result = 0;
+	stopedTime = 0;
+	// if(document.getElementById('btn-stop')){
+		document.getElementById('btn-stop').removeEventListener("click", stop);
+	// 	document.getElementById('btn-stop').id = 'btn-start';
+	// 	document.getElementById('btn-start').innerHTML = 'Start';
+	// }
+	document.getElementById('btn-split').removeEventListener("click", split);
+	document.getElementById('btn-reset').removeEventListener("click", reset);  
+	document.getElementById('btn-start').removeEventListener("click", resume);
+	document.getElementById('btn-start').addEventListener("click", start);
+};
 
 function convertTime(time) {
 	var milliseconds = time % 1000;
@@ -26,71 +92,3 @@ function convertTime(time) {
 	if(hours < 10) hours = '0' + hours;
 	return (hours + " : " + minutes + " : " + seconds + " . " + milliseconds);
 }
-
-function runTime() {
-	var currentTime = new Date();
-	result = currentTime - starts;
-	showTime();
-}
-
-function start() {
-	// console.log(document.getElementById('btn-start'));
-	// document.getElementById('btn-start').id = 'btn-stop';
-	// document.getElementById('btn-stop').innerHTML = 'Stop';
-	document.getElementById('btn-start').removeEventListener("click", start);
-	document.getElementById('btn-stop').addEventListener("click", stop);
-	document.getElementById('btn-split').addEventListener("click", split);
-	document.getElementById('btn-reset').addEventListener("click", reset);  
-	starts = new Date();
-	myTimer = setInterval(runTime, 10);
-};
-
-function stop() {
-	// document.getElementById('btn-stop').id = 'btn-start';
-	// document.getElementById('btn-start').innerHTML = 'Start';
-	// document.getElementById('btn-start').addEventListener("click", start);
-	// console.log('stop', document.getElementById('btn-start'));
-	clearInterval(myTimer);
-	document.getElementById('btn-start').addEventListener("click", resume);
-	document.getElementById('btn-stop').removeEventListener("click", stop);
-	document.getElementById('btn-split').removeEventListener("click", split);
-	stopedTime += result;
-	var stop = document.createElement('p');
-	stop.innerHTML = 'Stop: ' + convertTime(result);
-	resultList.appendChild(stop);
-};
-function resume() {
-	document.getElementById('btn-start').removeEventListener("click", resume);
-	document.getElementById('btn-stop').addEventListener("click", stop);
-	document.getElementById('btn-split').addEventListener("click", split);
-	//document.getElementById('btn-reset').addEventListener("click", reset);  
-	starts = new Date();
-	myTimer = setInterval(runTime, 10);
-};
-function split() {
-	var split = document.createElement('p');
-	split.innerHTML = 'Split: ' + convertTime(result);
-	resultList.appendChild(split);
-};
-
-function reset() {
-	clearInterval(myTimer);
-	txt = "00 : 00 : 00 . 000";
-	displ.innerHTML = txt;
-	resultList.innerHTML = '';
-	// document.getElementById('btn-stop').id = 'btn-start';
-	// document.getElementById('btn-start').innerHTML = 'Start';
-	starts = 0;
-	result = 0;
-	stopedTime = 0;
-	document.getElementById('btn-start').removeEventListener("click", resume);
-	document.getElementById('btn-stop').removeEventListener("click", stop);
-	document.getElementById('btn-split').removeEventListener("click", split);
-	document.getElementById('btn-reset').removeEventListener("click", reset);  
-	document.getElementById('btn-start').addEventListener("click", start);
-};
-
-// if( document.getElementById('btn-stop') ) {
-// 	document.getElementById('btn-stop').addEventListener("click", stop);
-// } 
-document.getElementById('btn-start').addEventListener("click", start);
